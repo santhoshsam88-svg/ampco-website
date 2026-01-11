@@ -1,9 +1,86 @@
 // ==========================================
 // AMPCO MANUFACTURERS - SHARED JAVASCRIPT
+// Version 2.0 - With Dark/Light Mode
 // ==========================================
 
-// Navigation scroll effect
+// ==========================================
+// THEME TOGGLE FUNCTIONALITY
+// ==========================================
+function initTheme() {
+    // Check for saved theme preference or default to dark
+    const savedTheme = localStorage.getItem('ampco-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeToggleIcon(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('ampco-theme', newTheme);
+    updateThemeToggleIcon(newTheme);
+}
+
+function updateThemeToggleIcon(theme) {
+    const toggleBtns = document.querySelectorAll('.theme-toggle');
+    toggleBtns.forEach(btn => {
+        const sunIcon = btn.querySelector('.sun-icon');
+        const moonIcon = btn.querySelector('.moon-icon');
+        if (sunIcon && moonIcon) {
+            if (theme === 'dark') {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+    });
+}
+
+// Initialize theme before DOM loads to prevent flash
+initTheme();
+
+// ==========================================
+// VIDEO CONTROLS
+// ==========================================
+function initVideoControls() {
+    const heroVideo = document.getElementById('heroVideo');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    
+    if (heroVideo && playPauseBtn) {
+        // Play/Pause toggle
+        playPauseBtn.addEventListener('click', () => {
+            if (heroVideo.paused) {
+                heroVideo.play();
+                playPauseBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+            } else {
+                heroVideo.pause();
+                playPauseBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+            }
+        });
+    }
+    
+    if (heroVideo && muteBtn) {
+        // Mute toggle
+        muteBtn.addEventListener('click', () => {
+            heroVideo.muted = !heroVideo.muted;
+            if (heroVideo.muted) {
+                muteBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+            } else {
+                muteBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+            }
+        });
+    }
+}
+
+// ==========================================
+// MAIN INITIALIZATION
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Navigation scroll effect
     const nav = document.getElementById('nav');
     
     if (nav) {
@@ -21,14 +98,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Theme toggle button click handlers
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+        btn.addEventListener('click', toggleTheme);
+    });
+
+    // Initialize video controls
+    initVideoControls();
+
     // Mobile menu toggle
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
     
-    if (mobileMenuBtn && mobileMenu) {
+    if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
             mobileMenuBtn.classList.toggle('active');
+            if (navLinks) {
+                navLinks.classList.toggle('mobile-active');
+            }
         });
     }
 

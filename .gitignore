@@ -1,20 +1,4 @@
-# Dependencies
 node_modules/
-
-# Build output
-.vercel
-dist/
-build/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# OS
 .DS_Store
-Thumbs.db
-
-# Logs
+.vercel
 *.log
